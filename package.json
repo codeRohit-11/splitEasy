@@ -9,6 +9,7 @@
     "dev:client": "npm run dev --prefix client",
     "build:client": "npm run build --prefix client",
     "dev:server": "npm run dev --prefix server",
-    "start:server": "npm start --prefix server"
+    "start:server": "npm start --prefix server",
+    "verify:balances": "npm run verify:balances --prefix server"
   }
 }

@@ -14,6 +14,15 @@ app.use(cors());
 // Parse JSON request bodies
 app.use(express.json());
 
+// Routes
+const memberRoutes = require('./routes/members');
+const expenseRoutes = require('./routes/expenses');
+const balanceRoutes = require('./routes/balances');
+
+app.use('/api/members', memberRoutes);
+app.use('/api/expenses', expenseRoutes);
+app.use('/api/balances', balanceRoutes);
+
 // Health check endpoint
 app.get('/api/health', (req, res) => {
   res.status(200).json({ status: 'ok' });
