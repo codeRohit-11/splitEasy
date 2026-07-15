@@ -36,11 +36,11 @@ export const Dashboard = () => {
   return (
     <div className="min-h-screen bg-slate-50/50 dark:bg-[#0c0d12] text-slate-800 dark:text-slate-100 py-8 px-4 sm:px-6 lg:px-8">
       {/* Header */}
-      <header className="max-w-7xl mx-auto mb-10 text-center space-y-2">
-        <h1 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-purple-600 via-violet-600 to-indigo-600 dark:from-purple-400 dark:via-violet-400 dark:to-indigo-400 m-0">
+      <header className="max-w-7xl mx-auto mb-10 flex flex-col items-center text-center space-y-2">
+        <h1 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-purple-600 via-violet-600 to-indigo-600 dark:from-purple-400 dark:via-violet-400 dark:to-indigo-400 m-0 w-full text-center">
           SplitEasy 💸
         </h1>
-        <p className="text-sm sm:text-base text-slate-500 dark:text-slate-400 max-w-xl mx-auto">
+        <p className="text-sm sm:text-base text-slate-500 dark:text-slate-400 max-w-xl mx-auto text-center">
           A zero-friction shared-expense splitter. No credentials, no accounts — just add members, log expenses, and see balances immediately.
         </p>
       </header>
