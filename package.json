@@ -1,0 +1,14 @@
+{
+  "name": "spliteasy-root",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "install:client": "npm install --prefix client",
+    "install:server": "npm install --prefix server",
+    "install:all": "npm run install:client && npm run install:server",
+    "dev:client": "npm run dev --prefix client",
+    "build:client": "npm run build --prefix client",
+    "dev:server": "npm run dev --prefix server",
+    "start:server": "npm start --prefix server"
+  }
+}
