@@ -17,6 +17,7 @@ export const ExpenseForm = () => {
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [validationField, setValidationField] = useState(null);
 
   // Initialize participants/shares when members list loads
   useEffect(() => {
@@ -71,21 +72,25 @@ export const ExpenseForm = () => {
 
     if (!description.trim()) {
       setError('Please provide a description.');
+      setValidationField('description');
       return;
     }
 
     if (parsedAmount < 0.01) {
       setError('Amount must be at least 0.01.');
+      setValidationField('amount');
       return;
     }
 
     if (!paidBy) {
       setError('Please select who paid.');
+      setValidationField('paidBy');
       return;
     }
 
     setLoading(true);
     setError(null);
+    setValidationField(null);
 
     let payload = {
       description: description.trim(),
@@ -97,6 +102,7 @@ export const ExpenseForm = () => {
     if (splitType === 'EQUAL') {
       if (participantIds.length === 0) {
         setError('Please select at least one participant to split the expense.');
+        setValidationField('participantIds');
         setLoading(false);
         return;
       }
@@ -105,6 +111,7 @@ export const ExpenseForm = () => {
       // CUSTOM
       if (!isCustomSumValid) {
         setError(`Split shares sum (₹${customAllocatedFormatted}) must equal the total amount (₹${amountFormatted}). Remaining: ₹${customRemaining}`);
+        setValidationField('splits');
         setLoading(false);
         return;
       }
@@ -126,6 +133,7 @@ export const ExpenseForm = () => {
       setDescription('');
       setAmount('');
       setError(null);
+      setValidationField(null);
 
       // Re-initialize shares/participants
       setParticipantIds(state.members.map((m) => m._id));
@@ -136,7 +144,9 @@ export const ExpenseForm = () => {
       setCustomShares(resetCustom);
     } catch (err) {
       const errMsg = err.response?.data?.error || 'Failed to add expense.';
+      const errField = err.response?.data?.field || null;
       setError(errMsg);
+      setValidationField(errField);
     } finally {
       setLoading(false);
     }
@@ -167,10 +177,17 @@ export const ExpenseForm = () => {
               type="text"
               required
               value={description}
-              onChange={(e) => setDescription(e.target.value)}
+              onChange={(e) => {
+                setDescription(e.target.value);
+                setValidationField(null);
+              }}
               placeholder="e.g. Dinner, Rent, Fuel"
               disabled={loading}
-              className="w-full px-4 py-2 border border-slate-200 dark:border-slate-700 rounded-xl bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all duration-200"
+              className={`w-full px-4 py-2 border rounded-xl bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 transition-all duration-200 ${
+                validationField === 'description'
+                  ? 'border-red-500 ring-2 ring-red-500/20 focus:ring-red-500'
+                  : 'border-slate-200 dark:border-slate-700 focus:ring-purple-500'
+              }`}
             />
           </div>
           <div>
@@ -184,10 +201,17 @@ export const ExpenseForm = () => {
               min="0.01"
               step="0.01"
               value={amount}
-              onChange={(e) => setAmount(e.target.value)}
+              onChange={(e) => {
+                setAmount(e.target.value);
+                setValidationField(null);
+              }}
               placeholder="0.00"
               disabled={loading}
-              className="w-full px-4 py-2 border border-slate-200 dark:border-slate-700 rounded-xl bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all duration-200"
+              className={`w-full px-4 py-2 border rounded-xl bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 transition-all duration-200 ${
+                validationField === 'amount'
+                  ? 'border-red-500 ring-2 ring-red-500/20 focus:ring-red-500'
+                  : 'border-slate-200 dark:border-slate-700 focus:ring-purple-500'
+              }`}
             />
           </div>
         </div>
@@ -200,9 +224,16 @@ export const ExpenseForm = () => {
           <select
             id="payer"
             value={paidBy}
-            onChange={(e) => setPaidBy(e.target.value)}
+            onChange={(e) => {
+              setPaidBy(e.target.value);
+              setValidationField(null);
+            }}
             disabled={loading}
-            className="w-full px-4 py-2 border border-slate-200 dark:border-slate-700 rounded-xl bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all duration-200"
+            className={`w-full px-4 py-2 border rounded-xl bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 transition-all duration-200 ${
+              validationField === 'paidBy'
+                ? 'border-red-500 ring-2 ring-red-500/20 focus:ring-red-500'
+                : 'border-slate-200 dark:border-slate-700 focus:ring-purple-500'
+            }`}
           >
             {state.members.map((member) => (
               <option key={member._id} value={member._id}>
@@ -300,7 +331,11 @@ export const ExpenseForm = () => {
               </span>
             </div>
 
-            <div className="space-y-2 max-h-56 overflow-y-auto pr-1">
+            <div className={`space-y-2 max-h-56 overflow-y-auto pr-1 border p-2 rounded-xl transition-all ${
+              validationField === 'splits'
+                ? 'border-red-200 dark:border-red-900 bg-red-50/10'
+                : 'border-transparent'
+            }`}>
               {state.members.map((member) => (
                 <div key={member._id} className="flex items-center gap-3 justify-between py-1 first:pt-0">
                   <span className="text-sm font-medium text-slate-700 dark:text-slate-300">
@@ -316,9 +351,16 @@ export const ExpenseForm = () => {
                       step="0.01"
                       placeholder="0.00"
                       value={customShares[member._id] || ''}
-                      onChange={(e) => handleCustomShareChange(member._id, e.target.value)}
+                      onChange={(e) => {
+                        handleCustomShareChange(member._id, e.target.value);
+                        setValidationField(null);
+                      }}
                       disabled={loading}
-                      className="w-full pl-7 pr-3 py-1.5 text-right border border-slate-200 dark:border-slate-700 rounded-xl bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm transition-all"
+                      className={`w-full pl-7 pr-3 py-1.5 text-right border rounded-xl bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 text-sm transition-all ${
+                        validationField === 'splits'
+                          ? 'border-red-500 ring-2 ring-red-500/20 focus:ring-red-500'
+                          : 'border-slate-200 dark:border-slate-700 focus:ring-purple-500'
+                      }`}
                     />
                   </div>
                 </div>
