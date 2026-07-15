@@ -5,6 +5,7 @@ import MemberManager from './MemberManager';
 import BalanceList from './BalanceList';
 import ExpenseForm from './ExpenseForm';
 import ExpenseList from './ExpenseList';
+import SettleUpView from './SettleUpView';
 
 export const Dashboard = () => {
   const { state, dispatch } = useGroup();
@@ -77,6 +78,7 @@ export const Dashboard = () => {
               <section className="lg:col-span-4 space-y-6 lg:sticky lg:top-6">
                 <MemberManager />
                 <BalanceList />
+                <SettleUpView />
               </section>
 
               {/* Right Column (Expense forms and ledger list) */}

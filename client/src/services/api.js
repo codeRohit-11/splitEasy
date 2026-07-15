@@ -51,6 +51,11 @@ export const getBalances = async () => {
   return response.data;
 };
 
+export const getSettlements = async () => {
+  const response = await api.get('/balances/settlements');
+  return response.data;
+};
+
 export default {
   getMembers,
   addMember,
@@ -58,5 +63,6 @@ export default {
   getExpenses,
   addExpense,
   removeExpense,
-  getBalances
+  getBalances,
+  getSettlements
 };
